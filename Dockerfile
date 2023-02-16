@@ -1,4 +1,4 @@
-FROM php:5.6-composer
+FROM hussaingandhi/php-5.6-composer
 
 WORKDIR /var/www
 
