@@ -1,0 +1,39 @@
+services:
+
+  mariadb:
+    container_name: maria_db
+    image: mariadb
+    ports:
+      - '3306:3306'
+    volumes:
+      - scrumwala:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_USER: toor
+      MYSQL_PASSWORD: toor
+      MYSQL_DATABASE: forge
+  
+  app:
+    container_name: scrum_wala
+    image: scrumwala
+    build:
+      context: .
+    volumes:
+      - scrumwala:/var/www
+    ports:
+      - '8081:8081'
+    environment:
+      - APP_KEY=d9iwGCkB7OzSGf7JTY5zjMZgRitC8qed
+      - DB_HOST=maria_db
+      - DB_DATABASE=forge
+      - DB_USERNAME=toor
+      - DB_PASSWORD=toor
+    depends_on:
+      - mariadb
+    restart: on-failure
+
+volumes:
+  scrumwala:
+
+networks:
+  scrumwala:
