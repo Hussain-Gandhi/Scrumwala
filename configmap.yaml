@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scrumwala-config
+data:
+  DB_HOST: "mariadb-statefulset-0.mariadb-service"
+  DB_NAME: "forge"
+  DB_USER: "toor" 
