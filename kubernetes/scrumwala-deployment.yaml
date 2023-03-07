@@ -10,7 +10,7 @@ spec:
   ports:
     - port: 8081
       targetPort: 8081
-  type: LoadBalancer
+  # type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -29,23 +29,8 @@ spec:
         app: scrumwala-pod
     spec:
       initContainers:
-      - name: scrumwala-init-1
-        image: hussaingandhi/php-5.6-composer
-        ports:
-        - containerPort: 8081
-        env:
-          - name: APP_KEY
-            valueFrom:
-              secretKeyRef:
-                name: scrumwala-secret
-                key: APP_KEY
-        volumeMounts:
-        - name: php-files
-          mountPath: /var/www/html
-        command: ["/bin/sh", "-c"]
-        args: ["php composer.phar update --no-scripts --no-interaction && php composer.phar install --no-scripts --no-interaction"]
-      - name: scrumwala-init-2
-        image: hussaingandhi/php-5.6-composer
+      - name: scrumwala-init-migrate
+        image: hussaingandhi/scrumwala:3.0
         ports:
         - containerPort: 8081
         env:
@@ -69,14 +54,11 @@ spec:
               secretKeyRef:
                 name: scrumwala-secret
                 key: DB_PSWD
-        volumeMounts:
-        - name: php-files
-          mountPath: /var/www/html
         command: ["/bin/sh", "-c"]
         args: ["php artisan migrate --force"]
       containers:
       - name: scrumwala
-        image: hussaingandhi/php-5.6-composer
+        image: hussaingandhi/scrumwala:3.0
         ports:
         - containerPort: 8081
         env:
@@ -105,13 +87,6 @@ spec:
               secretKeyRef:
                 name: scrumwala-secret
                 key: DB_PSWD
-        volumeMounts:
-        - name: php-files
-          mountPath: /var/www/html
         command: ["/bin/sh", "-c"]
         args: ["php artisan serve --host 0.0.0.0 --port 8081"]
         # args: ["php composer.phar update --no-scripts --no-interaction && php composer.phar install --no-scripts --no-interaction && php artisan migrate --force && php artisan serve --host 0.0.0.0 --port 8081"]
-      volumes:
-        - name: php-files
-          hostPath:
-            path: /home/hussain.gandhi/personal/kubernetes/Scrumwala
