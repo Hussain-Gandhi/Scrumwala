@@ -1,28 +1,33 @@
+#!/bin/bash
+
 # Deleting Ingress
-kubectl delete ingress scrumwala-ingress
+kubectl delete -f ingress.yaml
 
 # Deleting Scrumwala Deployment
-kubectl delete deployments scrumwala-deployment
-
-# It takes around 25 to 30 to completly delete the Scrumwala Deployment
-for n in {1..15}
+kubectl delete -f scrumwala-deployment.yaml
+SCRUMWALA=$(kubectl get po | grep scrumwala-deployment | awk '{ print $3 }')
+while [ "$SCRUMWALA" != "" ]
 do
-    printf ". "
-    sleep 2
+    sleep 1
+    SCRUMWALA=$(kubectl get po | grep scrumwala-deployment | awk '{ print $3 }')
 done
-echo ""
+
+sleep 3
 
 # Deleting Mariadb StatefulSet
-kubectl delete statefulsets.apps mariadb-statefulset
+kubectl delete -f mariadb-statefulset.yaml
+MARIADB=$(kubectl get po | grep mariadb-statefulset-0 | awk '{ print $3 }')
+while [ "$MARIADB" != "" ]
+do
+    sleep 1
+    MARIADB=$(kubectl get po | grep mariadb-statefulset-0 | awk '{ print $3 }')
+done
 
 # Deleting Mariadb PVC
 kubectl delete pvc mariadb-pvctemplates-mariadb-statefulset-0
 
-# Deleting mariadb and scrumwala services
-kubectl delete svc mariadb-service scrumwala-service
-
 # Deleting ConfigMap
-kubectl delete configmaps scrumwala-config
+kubectl delete -f configmap.yaml
 
 # Deleting Secret
-kubectl delete secrets scrumwala-secret
+kubectl delete -f secret.yaml
