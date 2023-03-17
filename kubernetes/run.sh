@@ -27,8 +27,13 @@ do
 done
 
 # Applying ingress
-kubectl apply -f ingress.yaml
+# kubectl apply -f ingress.yaml
 
 # Getting external ip from ingress service
-EXTERNALIP=$(kubectl get svc -n kube-system | grep traefik | awk '{ print $4 }')
-echo -e "\n\nOpen this link http://$EXTERNALIP:80 on your Browser."
+# EXTERNALIP=$(kubectl get svc -n kube-system | grep traefik | awk '{ print $4 }')
+# echo -e "\n\nOpen this link http://$EXTERNALIP:80 on your Browser."
+
+# Action Items:
+# path to ingress
+# job / cronjob
+# hostname to dns

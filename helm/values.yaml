@@ -1,0 +1,11 @@
+mariadb:
+  auth:
+    database: "forge"
+    username: "toor"
+    password: "toor"
+    rootPassword: "toor"
+  primary:
+    service:
+      clusterIP: "None"
+global:
+  dbChartName: mariadb

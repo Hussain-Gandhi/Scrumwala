@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: general-ingress
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: hussain.technocrates.devops
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: scrumwala-service
+            port:
+              number: 8081
+  - host: ankit.technocrates.devops
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: flask-app-service
+            port:
+              number: 8081
+  - host: khushal.technocrates.devops
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: appservice
+            port:
+              number: 80
+  - host: dhruv.technocrates.devops
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: deployment-service
+            port:
+              number: 8000

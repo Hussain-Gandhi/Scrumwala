@@ -1,0 +1,15 @@
+config:
+  dbName: "forge" # Database Name (default := "forge")
+  dbUser: "toor" # Database User (default := "toor")
+secret:
+  appKey: "d9iwGCkB7OzSGf7JTY5zjMZgRitC8qed" # App Key (default := "d9iwGCkB7OzSGf7JTY5zjMZgRitC8qed")
+  dbRootPswd: "toor" # Database Rppt Password (default := "toor")
+  dbPswd: "toor" # Database Password (default := "toor")
+scrumwala:
+  replicas: "1" # Replicas of Application (default := 1)
+  image: "hussaingandhi/scrumwala" # Base Image of application (default := "hussaingandhi/scrumwala")
+  imageVersion: "3.0" # Version of Base Image (default := "3.0")
+  service:
+    port: "8081" # External port of service (default := "8081")
+  ingress:
+    host: "hussain.technocrates.devops"

@@ -1,0 +1,10 @@
+apiVersion: v2
+name: app
+appVersion: "1.0.0"
+version: "1.0.1"
+description: A dependency based Helm chart for Scrumwala.
+type: application
+dependencies:
+  - name: mariadb
+    version: "11.5.3"
+    repository: https://charts.bitnami.com/bitnami

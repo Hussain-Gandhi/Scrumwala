@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Deleting Ingress
-kubectl delete -f ingress.yaml
+# kubectl delete -f ingress.yaml
 
 # Deleting Scrumwala Deployment
 kubectl delete -f scrumwala-deployment.yaml

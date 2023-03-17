@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "scrumwala.helper" . }}
+  labels:
+    run: {{ include "scrumwala.helper" . }}
+spec:
+  selector:
+    app: {{ include "scrumwala.helper" . }}
+  ports:
+    - port: {{ .Values.scrumwala.service.port | default "8081" }}
+      targetPort: 8081
+  # type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "scrumwala.helper" . }}
+  labels:
+    app: {{ include "scrumwala.helper" . }}
+spec:
+  replicas: {{ .Values.scrumwala.replicas | default "1" }}
+  selector:
+    matchLabels:
+      app: {{ include "scrumwala.helper" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "scrumwala.helper" . }}
+    spec:
+      initContainers:
+      - name: scrumwala-init-migrate
+        image: {{ .Values.scrumwala.image | default "hussaingandhi/scrumwala" }}:{{ .Values.scrumwala.imageVersion | default "3.0" }}
+        ports:
+        - containerPort: 8081
+        env:
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "scrumwala.helper" . }}
+                key: DB_HOST
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "scrumwala.helper" . }}
+                key: DB_NAME
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "scrumwala.helper" . }}
+                key: DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "scrumwala.helper" . }}
+                key: DB_PSWD
+        command: ["/bin/sh", "-c"]
+        args: ["php artisan migrate --force"]
+      containers:
+      - name: scrumwala
+        image: {{ .Values.scrumwala.image | default "hussaingandhi/scrumwala" }}:{{ .Values.scrumwala.imageVersion | default "3.0" }}
+        ports:
+        - containerPort: 8081
+        env:
+          - name: APP_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "scrumwala.helper" . }}
+                key: APP_KEY
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "scrumwala.helper" . }}
+                key: DB_HOST
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "scrumwala.helper" . }}
+                key: DB_NAME
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "scrumwala.helper" . }}
+                key: DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "scrumwala.helper" . }}
+                key: DB_PSWD
+        command: ["/bin/sh", "-c"]
+        args: ["php artisan serve --host 0.0.0.0 --port 8081"]
+        # args: ["php composer.phar update --no-scripts --no-interaction && php composer.phar install --no-scripts --no-interaction && php artisan migrate --force && php artisan serve --host 0.0.0.0 --port 8081"]
