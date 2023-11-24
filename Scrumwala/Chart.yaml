@@ -6,5 +6,5 @@ description: A dependency based Helm chart for Scrumwala.
 type: application
 dependencies:
   - name: mariadb
-    version: "11.5.3"
+    version: "14.1.4"
     repository: https://charts.bitnami.com/bitnami
